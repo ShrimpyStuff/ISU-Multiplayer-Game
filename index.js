@@ -1,7 +1,7 @@
 const express = require('express')
 const fs = require('fs')
 const app = express()
-const https = require('https').createServer(app)
+const http = require('http').createServer(app)
 const WebSocket = require('ws')
 
 app.use(express.static('public'))
@@ -13,7 +13,7 @@ app.use(function (req, res, next) {
   res.status(404).sendFile(__dirname + '/public/' + '404.html')
 })
 
-const wss = new WebSocket.Server({ server: https })
+const wss = new WebSocket.Server({ server: http })
 
 wss.on('connection', function connection (ws) {
   console.log('User Connected')
@@ -22,6 +22,6 @@ wss.on('connection', function connection (ws) {
   })
 })
 
-https.listen(process.env.PORT || 8080, () => {
-  console.log('listening on *:' + https.address().port)
+http.listen(process.env.PORT || 8080, () => {
+  console.log('listening on *:' + http.address().port)
 })
