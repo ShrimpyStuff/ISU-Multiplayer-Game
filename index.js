@@ -15,8 +15,12 @@ app.use(function (req, res, next) {
 
 const wss = new WebSocket.Server({ server: http })
 
+let players = [1];
+
 wss.on('connection', function connection (ws) {
-  console.log('User Connected')
+  ws.send(`Player Number: ${players[players.length - 1]}`)
+  players.push((players[players.length - 1] + 1))
+
   ws.on('message', function incoming (message) {
     console.log('received: %s', message)
   })
