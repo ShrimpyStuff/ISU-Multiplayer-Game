@@ -22,14 +22,13 @@ wss.on('connection', function connection (ws) {
   players.push((number + 1))
 
   ws.on('message', function incoming (message) {
-    console.log('received: %s', message)
-    /*if (!message.startsWith('Player')) {
+    if (!message.startsWith('Player')) {
       console.log('received: %s', message)
-    }*/
-    if (message.startsWith(`Player:${number}`)) {
+    }
+    if (message.startsWith(`Player:`)) {
       wss.clients.forEach(function each (client) {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
-          client.send(message.replace(`Player:${number},`, ''))
+          client.send(message)
         }
       })
     }
