@@ -14,7 +14,7 @@ app.use(function (req, res, next) {
 
 const wss = new WebSocket.Server({ server: http })
 
-const players = [1]
+let players = [1]
 
 wss.on('connection', function connection (ws) {
   const number = players[players.length - 1]
@@ -34,7 +34,9 @@ wss.on('connection', function connection (ws) {
     }
   })
   ws.on('close', () => {
-    players.splice[number]
+    if (!wss.clients) {
+      players = [1]
+    }
   })
 })
 
