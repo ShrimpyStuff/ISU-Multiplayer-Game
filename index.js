@@ -21,7 +21,7 @@ wss.on('connection', function connection (ws) {
   ws.send(`Player Number: ${number}`)
   players.push((number + 1))
 
-  ws.on('message', function incoming (message) {
+  ws.on('message', (message) => {
     if (!message.startsWith('Player')) {
       console.log('received: %s', message)
     }
@@ -32,6 +32,9 @@ wss.on('connection', function connection (ws) {
         }
       })
     }
+  })
+  ws.on('close', () => {
+    players.splice[number]
   })
 })
 
