@@ -19,6 +19,11 @@ let players = [1]
 wss.on('connection', function connection (ws) {
   const number = players[players.length - 1]
   ws.send(`Player Number: ${number}`)
+  wss.clients.forEach(function each (client) {
+    if (client !== ws && client.readyState === WebSocket.OPEN) {
+      client.send(`Player Move: ${number}`)
+    }
+  })
   players.push((number + 1))
 
   ws.on('message', (message) => {
