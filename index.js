@@ -21,7 +21,7 @@ wss.on('connection', function connection (ws) {
   ws.send(`Player Number: ${number}`)
   wss.clients.forEach(function each (client) {
     if (client !== ws && client.readyState === WebSocket.OPEN) {
-      client.send(`Player Move: ${number}`)
+      client.send(`Player Joined: ${number}`)
     }
   })
   players.push((number + 1))
@@ -38,6 +38,7 @@ wss.on('connection', function connection (ws) {
       })
     }
   })
+  
   ws.on('close', () => {
     if (!wss.clients) {
       players = [1]
