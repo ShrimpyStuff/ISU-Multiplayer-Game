@@ -27,7 +27,7 @@ wss.on('connection', function connection (ws) {
   players.push((number + 1))
 
   ws.on('message', (message) => {
-    if (!message.startsWith('Player')) {
+    if (!message.startsWith('Player') || !message == "heartbeat") {
       console.log('received: %s', message)
     }
     if (message.startsWith(`Player:`)) {
