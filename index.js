@@ -3,11 +3,7 @@ const app = express()
 const http = require('http').createServer(app)
 const WebSocket = require('ws')
 
-app.get('/assets/ground and platforms', function (req, res) {
-  res.sendFile(__dirname + "ground and platforms");
-})
-
-app.get('/assets/ground%20and%20platforms', function (req, res) {
+app.get('/g&p', function (req, res) {
   res.sendFile(__dirname + "ground and platforms");
 })
 
