@@ -40,7 +40,7 @@ wss.on('connection', function connection (ws) {
   })
   
   ws.on('close', () => {
-    if (!wss.clients) {
+    if (!wss.clients.size) {
       players = [1]
     }
   })
