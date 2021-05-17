@@ -4,7 +4,7 @@ const http = require('http').createServer(app)
 const WebSocket = require('ws')
 
 app.get('/g&p', function (req, res) {
-  res.sendFile(__dirname + "ground and platforms");
+  res.sendFile(__dirname + "/ground and platforms");
 })
 
 const wss = new WebSocket.Server({ server: http })
