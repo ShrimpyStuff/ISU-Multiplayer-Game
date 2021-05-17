@@ -1,5 +1,12 @@
-const http = require('http').createServer()
+const express = require('express')
+const app = express()
+const http = require('http').createServer(app)
 const WebSocket = require('ws')
+
+
+app.get('/assets/ground and platforms', function (req, res) {
+  res.sendFile("ground and platforms");
+})
 
 const wss = new WebSocket.Server({ server: http })
 
