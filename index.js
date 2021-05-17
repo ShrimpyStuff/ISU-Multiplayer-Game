@@ -5,7 +5,7 @@ const WebSocket = require('ws')
 
 
 app.get('/assets/ground and platforms', function (req, res) {
-  res.sendFile("ground and platforms");
+  res.sendFile(__dirname + "ground and platforms");
 })
 
 const wss = new WebSocket.Server({ server: http })
