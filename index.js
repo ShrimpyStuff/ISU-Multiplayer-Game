@@ -10,7 +10,7 @@ app.get('/g&p', function (req, res) {
 const wss = new WebSocket.Server({ server: http })
 
 let players = [1]
-const playersInGame = {}
+//const playersInGame = {}
 
 wss.on('connection', function connection (ws) {
   const number = players[players.length - 1]
@@ -26,9 +26,9 @@ wss.on('connection', function connection (ws) {
     if (!message.startsWith('Player') || !message === 'heartbeat') {
       console.log('received: %s', message)
     }
-    if (message.match(/^Player:[0-9], Move: .*, Position: .*/)) {
-      playersInGame[message.match(/^Player:([0-9]), Move: .*, Position: .*/)[0]].position = message.match(/^Player:[0-9], Move: .*, Position: (.*)/)[0]
-    }
+    //if (message.match(/^Player:[0-9], Move: .*, Position: .*/)) {
+      //playersInGame[message.match(/^Player:([0-9]), Move: .*, Position: .*/)[0]].position = message.match(/^Player:[0-9], Move: .*, Position: (.*)/)[0]
+    //}
     if (message.startsWith('Player:')) {
       wss.clients.forEach(function each (client) {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
