@@ -26,10 +26,6 @@ wss.on('connection', function connection (ws) {
     if (!message.startsWith('Player') || !(message === 'heartbeat')) {
       console.log('received: %s', message)
     }
-    if (message === "Requesting new number") {
-      ws.send(players[players.length - 2]);
-      console.log(players);
-    }
     //if (message.match(/^Player:[0-9], Move: .*, Position: .*/)) {
       //playersInGame[message.match(/^Player:([0-9]), Move: .*, Position: .*/)[0]].position = message.match(/^Player:[0-9], Move: .*, Position: (.*)/)[0]
     //}
