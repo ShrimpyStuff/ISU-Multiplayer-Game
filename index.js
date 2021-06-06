@@ -13,7 +13,6 @@ let players = [1]
 
 wss.on('connection', function connection (ws) {
   const number = players[players.length - 1]
-  ws.send(`Player Number: ${number}`)
   wss.clients.forEach(function each(client) {
     if (client !== ws && client.readyState === WebSocket.OPEN) {
       client.send(`Player Joined: ${number}`)
@@ -25,10 +24,10 @@ wss.on('connection', function connection (ws) {
     if (!message.startsWith('Player') || !(message === 'heartbeat')) {
       console.log('received: %s', message)
     }
-    if (message.startsWith('Player:')) {
+    if (message.startsWith('Move:')) {
       wss.clients.forEach(function each (client) {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
-          client.send(message)
+          client.send(`Player:${number}, ${message}`)
         }
       })
     }
