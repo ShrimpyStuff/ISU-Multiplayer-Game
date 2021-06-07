@@ -37,9 +37,6 @@ wss.on('connection', function connection (ws) {
       })
     }
     if (message.match(/Position: \(.*\)$/)) {
-      if (!playersInGame[number-1]) {
-        playersInGame.push({});
-      }
       playersInGame[number-1].name = number.toString();
       playersInGame[number-1].position = message.replace(/Move: .*, Position: \((.*)\)$/, "$1");
     }
