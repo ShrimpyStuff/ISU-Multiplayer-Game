@@ -44,6 +44,9 @@ wss.on('connection', function connection (ws) {
   ws.on('close', () => {
     if (!wss.clients.size) {
       players = [1]
+      playersInGame = []
+    } else {
+      playersInGame[number - 1] = {}
     }
     wss.clients.forEach(function each (client) {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
