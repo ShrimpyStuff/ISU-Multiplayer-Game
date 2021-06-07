@@ -15,7 +15,7 @@ let playersInGame = [];
 wss.on('connection', function connection (ws) {
   const number = players[players.length - 1]
   if (players != [1]) {
-    ws.send(`Players-In-Game: ${playersInGame}`);
+    ws.send("hello");
   }
   playersInGame.push({});
   playersInGame[number-1].name = number.toString();
