@@ -14,7 +14,7 @@ let playersInGame = [];
 
 wss.on('connection', function connection (ws) {
   const number = players[players.length - 1]
-  if (players != [1]) {
+  if (wss.clients.size > 1) {
     ws.send("hello");
   }
   playersInGame.push({});
