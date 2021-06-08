@@ -29,7 +29,7 @@ wss.on('connection', function connection (ws) {
   players.push((number + 1))
 
   ws.on('message', (message) => {
-    if (message.startsWith('Move:')) {
+    if (message.startsWith('Move: Up')) {
       wss.clients.forEach(function each (client) {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(`Player:${number}, ${message}`)
@@ -37,6 +37,11 @@ wss.on('connection', function connection (ws) {
       })
     }
     if (message.match(/Position: \(.*\)$/)) {
+      wss.clients.forEach(function each (client) {
+        if (client !== ws && client.readyState === WebSocket.OPEN) {
+          client.send(`Player:${number}, ${message}`)
+        }
+      })
       playersInGame[number-1].name = number.toString();
       playersInGame[number-1].position = message.replace(/Move: .*, Position: \((.*)\)$/, "$1");
     }
