@@ -61,6 +61,4 @@ wss.on('connection', function connection (ws) {
   })
 })
 
-http.listen(process.env.PORT || 8080, () => {
-  console.log('listening on *:' + http.address().port)
-})
+http.listen(process.env.PORT || 8080)
