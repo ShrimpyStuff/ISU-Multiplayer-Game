@@ -29,22 +29,22 @@ wss.on('connection', function connection (ws) {
   players.push((number + 1))
 
   ws.on('message', (message) => {
-    if (message.startsWith('Move: Up')) {
+    if (message.startsWith('Move:')) {
       wss.clients.forEach(function each (client) {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(`Player:${number}, ${message}`)
         }
       })
     }
-    if (message.match(/Position: \(.*\)$/)) {
+    /*if (message.match(/Position: \(.*\)$/)) {
       wss.clients.forEach(function each (client) {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(`Player:${number}, ${message}`)
         }
       })
-      /*playersInGame[number-1].name = number.toString();
-      playersInGame[number-1].position = message.replace(/Move: .*, Position: \((.*)\)$/, "$1");*/
-    }
+      playersInGame[number-1].name = number.toString();
+      playersInGame[number-1].position = message.replace(/Move: .*, Position: \((.*)\)$/, "$1");
+    }*/
   })
   ws.on('close', () => {
     if (!wss.clients.size) {
