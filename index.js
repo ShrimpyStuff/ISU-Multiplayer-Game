@@ -14,12 +14,12 @@ let playersInGame = [];
 
 wss.on('connection', function connection (ws) {
   const number = players[players.length - 1]
-  /*if (wss.clients.size > 1) {
+  if (wss.clients.size > 1) {
     ws.send(`Players-In-Game: ${JSON.stringify(playersInGame)}`);
   }
   playersInGame.push({});
   playersInGame[number-1].name = number.toString();
-  playersInGame[number-1].position = "0, 0, 0";*/
+  playersInGame[number-1].position = "0, 0, 0";
 
   wss.clients.forEach(function each(client) {
     if (client !== ws && client.readyState === WebSocket.OPEN) {
@@ -36,7 +36,7 @@ wss.on('connection', function connection (ws) {
         }
       })
     }
-    /*if (message.match(/Position: \(.*\)$/)) {
+    if (message.match(/Position: \(.*\)$/)) {
       wss.clients.forEach(function each (client) {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(`Player:${number}, ${message}`)
@@ -44,7 +44,7 @@ wss.on('connection', function connection (ws) {
       })
       playersInGame[number-1].name = number.toString();
       playersInGame[number-1].position = message.replace(/Move: .*, Position: \((.*)\)$/, "$1");
-    }*/
+    }
   })
   ws.on('close', () => {
     if (!wss.clients.size) {
