@@ -7,11 +7,9 @@ app.get('/g&p', function (req, res) {
   res.sendFile(__dirname + '/ground and platforms')
 })
 
-const wssMain = new WebSocket.Server({ server: http })
+const wss = new WebSocket.Server({ server: http, path: "/" })
 
-const wssLogin = new WebSocket.Server({ server: http, path: "/login" })
-
-wssLogin.on('connection', function connection (ws) {
+wss.on('connection', function connection (ws) {
     ws.onmessage = (event) => {
         if (new RegExp('Username: .*, Password: .*').test(event)) {
             let username = event.match(/Username: (.*),/)
@@ -23,7 +21,7 @@ wssLogin.on('connection', function connection (ws) {
 let players = [1]
 let playersInGame = [];
 
-wssMain.on('connection', function connection (ws) {
+wss.on('connection', function connection (ws) {
   const number = players[players.length - 1]
   if (wssMain.clients.size > 1) {
     ws.send(`Players-In-Game: ${JSON.stringify(playersInGame)}`);
@@ -32,7 +30,7 @@ wssMain.on('connection', function connection (ws) {
   playersInGame[number-1].name = number.toString();
   playersInGame[number-1].position = "0, 0, 0";
 
-  wssMain.clients.forEach(function each(client) {
+  wss.clients.forEach(function each(client) {
     if (client !== ws && client.readyState === WebSocket.OPEN) {
       client.send(`Player Joined: ${number}`)
     }
@@ -41,14 +39,14 @@ wssMain.on('connection', function connection (ws) {
 
   ws.on('message', (message) => {
     if (message.startsWith('Move:')) {
-      wssMain.clients.forEach(function each (client) {
+      wss.clients.forEach(function each (client) {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(`Player:${number}, ${message}`)
         }
       })
     }
     if (message.match(/Position: \(.*\)$/)) {
-      wssMain.clients.forEach(function each (client) {
+      wss.clients.forEach(function each (client) {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(`Player:${number}, ${message}`)
         }
@@ -64,7 +62,7 @@ wssMain.on('connection', function connection (ws) {
     } else {
       playersInGame[number - 1] = {}
     }
-    wssMain.clients.forEach(function each (client) {
+    wss.clients.forEach(function each (client) {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(`Player Left: ${number}`)
       }
