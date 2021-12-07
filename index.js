@@ -9,19 +9,25 @@ app.get('/g&p', function (req, res) {
 
 const wss = new WebSocket.Server({ server: http, path: "/" })
 
-wss.on('connection', function connection (ws) {
+let players = [1]
+let playersInGame = [];
+
+wss.on('connection', async function connection (ws) {
+  ws.send('SendLoginDetails')
+  await function () {
     ws.onmessage = (event) => {
         if (new RegExp('Username: .*, Password: .*').test(event)) {
             let username = event.match(/Username: (.*),/)
             let password = event.match(/Password: (.*)/)
+            if () {
+              return true;
+            } else {
+              ws.close()
+              return false
+            }
         }
     }
-})
-
-let players = [1]
-let playersInGame = [];
-
-wss.on('connection', function connection (ws) {
+  }
   const number = players[players.length - 1]
   if (wssMain.clients.size > 1) {
     ws.send(`Players-In-Game: ${JSON.stringify(playersInGame)}`);
