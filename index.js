@@ -7,7 +7,7 @@ app.get('/g&p', function (req, res) {
   res.sendFile(__dirname + '/ground and platforms')
 })
 
-const wss = new WebSocket.Server({ server: http, path: "/" })
+const wss = new WebSocket.Server({ server: http })
 
 let players = [1]
 let playersInGame = [];
