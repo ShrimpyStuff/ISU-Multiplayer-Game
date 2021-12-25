@@ -2,9 +2,16 @@ const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
 const WebSocket = require('ws')
+const bodyParser = require('body-parser')
 
 app.get('/g&p', function (req, res) {
   res.sendFile(__dirname + '/ground and platforms')
+})
+
+app.use(bodyParser.json())
+
+app.get('/login', function (req, res) {
+  res.sendFile(__dirname + '/index.html')
 })
 
 const wss = new WebSocket.Server({ server: http })
@@ -12,22 +19,20 @@ const wss = new WebSocket.Server({ server: http })
 let players = [1]
 let playersInGame = [];
 
-wss.on('connection', async function connection (ws) {
+wss.on('connection', function connection (ws) {
   ws.send('SendLoginDetails')
-  await function () {
-    ws.onmessage = (event) => {
-        if (new RegExp('Username: .*, Password: .*').test(event)) {
-            let username = event.match(/Username: (.*),/)
-            let password = event.match(/Password: (.*)/)
-            if () {
-              return true;
-            } else {
-              ws.close()
-              return false
-            }
-        }
+
+  app.post('/login', function (req, res) {
+    if (new RegExp('Username: .*, Password: .*').test(req.body)) {
+      let username = req.body.match(/Username: (.*),/)
+      let password = req.body.match(/Password: (.*)/)
+      if (username && password) {
+      } else {
+        ws.close()
+      }
     }
-  }
+  })
+
   const number = players[players.length - 1]
   if (wssMain.clients.size > 1) {
     ws.send(`Players-In-Game: ${JSON.stringify(playersInGame)}`);
