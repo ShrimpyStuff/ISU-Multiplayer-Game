@@ -14,10 +14,6 @@ app.use(bodyParser.json())
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.get('/login', function (req, res) {
-  res.sendFile(__dirname + '/index.html')
-})
-
 const pool = mysql.createPool({
   host: process.env.HOST,
   user: process.env.USER,
