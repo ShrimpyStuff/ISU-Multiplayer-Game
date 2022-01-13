@@ -10,8 +10,6 @@ app.get('/g&p', function (req, res) {
   res.sendFile(__dirname + '/ground and platforms')
 })
 
-app.use(bodyParser.json())
-
 app.use(bodyParser.urlencoded({ extended: true }))
 
 const pool = mysql.createPool({
@@ -29,6 +27,7 @@ function newToken() {
 }
 
 app.post('/login', function (req, res) {
+  console.log(req)
   let username = req.body.username
   let password = req.body.password
   pool.query(`SELECT \`password\` FROM \`logins\` WHERE \`username\` = (SELECT \`username\` FROM logins WHERE \`username\` = '${username}')`, (err, result, fields) => {
