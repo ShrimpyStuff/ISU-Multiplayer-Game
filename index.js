@@ -74,17 +74,17 @@ wss.on('connection', function connection (ws) {
     ws.send(`Players-In-Game: ${JSON.stringify(playersInGame)}`);
   }
   playersInGame.push({name: username, position: "215, 280, 0"});
-  
-  wss.clients.forEach(function each(client) {
-    client.send(`Player:${username}, Portal:${pool.query(`SELECT \`PortalNumber\` FROM \`logins\` WHERE \`username\` = '${username}')`)}`)
-  })
 
   wss.clients.forEach(function each(client) {
     if (client !== ws && client.readyState === WebSocket.OPEN) {
       client.send(`Player Joined: ${username}`)
     }
   })
-  players.push((username + 1))
+  players.push((number + 1))
+
+  wss.clients.forEach(function each(client) {
+    client.send(`Player:${username}, Portal:${pool.query(`SELECT \`PortalNumber\` FROM \`logins\` WHERE \`username\` = '${username}')`)}`)
+  })
 
   ws.on('message', (message) => {
     if (message.startsWith('Portal:')) {
