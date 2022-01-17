@@ -10,6 +10,10 @@ app.get('/g&p', function (req, res) {
   res.sendFile(__dirname + '/ground and platforms')
 })
 
+app.get('/portals.txt', function (req, res) {
+  res.sendFile(__dirname + '/portals.txt')
+})
+
 app.use(bodyParser.urlencoded({ extended: true }))
 
 const pool = mysql.createPool({
@@ -29,11 +33,11 @@ function newToken() {
 app.post('/login', function (req, res) {
   console.log(req)
   let username = req.body.username
+  username = username.trim().split(' ')[0]
   let password = req.body.password
   pool.query(`SELECT \`password\` FROM \`logins\` WHERE \`username\` = (SELECT \`username\` FROM logins WHERE \`username\` = '${username}')`, (err, result, fields) => {
     if (err) {
       res.redirect('/login')
-      throw err
     }
     if (password === result[0].password) {
       let randomToken = newToken()
@@ -66,52 +70,42 @@ wss.on('connection', function connection (ws) {
     }
   })
   const number = players[players.length - 1]
-  if (wssMain.clients.size > 1) {
+  if (wss.clients.size > 1) {
     ws.send(`Players-In-Game: ${JSON.stringify(playersInGame)}`);
   }
-  playersInGame.push({});
-  playersInGame[number-1].name = number.toString();
-  playersInGame[number-1].position = "0, 0, 0";
+  playersInGame.push({name: username, position: "215, 280, 0"});
   
   wss.clients.forEach(function each(client) {
-    client.send(`Player:${number}, Portal:${pool.query(`SELECT \`PortalNumber\` FROM \`logins\` WHERE \`username\` = '${username}')`)}`)
+    client.send(`Player:${username}, Portal:${pool.query(`SELECT \`PortalNumber\` FROM \`logins\` WHERE \`username\` = '${username}')`)}`)
   })
 
   wss.clients.forEach(function each(client) {
     if (client !== ws && client.readyState === WebSocket.OPEN) {
-      client.send(`Player Joined: ${number}`)
+      client.send(`Player Joined: ${username}`)
     }
   })
-  players.push((number + 1))
+  players.push((username + 1))
 
   ws.on('message', (message) => {
     if (message.startsWith('Portal:')) {
       wss.clients.forEach(function each (client) {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
-          client.send(`Player:${number}, ${message}`)
+          client.send(`Player:${username}, ${message}`)
         }
       })
       pool.query(`UPDATE \`logins\` SET \`PortalNumber\` = \`${message.split(':')[1]}\` WHERE username=\`${username}\``, )
     }
-    if (message.startsWith('Move:')) {
-      wss.clients.forEach(function each (client) {
-        if (client !== ws && client.readyState === WebSocket.OPEN) {
-          client.send(`Player:${number}, ${message}`)
-        }
-      })
-    }
     if (message.match(/Position: \(.*\)$/)) {
       wss.clients.forEach(function each (client) {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
-          client.send(`Player:${number}, ${message}`)
+          client.send(`Player:${username}, ${message}`)
         }
       })
-      playersInGame[number-1].name = number.toString();
       playersInGame[number-1].position = message.replace(/Move: .*, Position: \((.*)\)$/, "$1");
     }
   })
   ws.on('close', () => {
-    if (!wssMain.clients.size) {
+    if (!wss.clients.size) {
       players = [1]
       playersInGame = []
     } else {
@@ -119,7 +113,7 @@ wss.on('connection', function connection (ws) {
     }
     wss.clients.forEach(function each (client) {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(`Player Left: ${number}`)
+        client.send(`Player Left: ${username}`)
       }
     })
   })
