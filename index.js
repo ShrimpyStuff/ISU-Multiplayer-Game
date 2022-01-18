@@ -31,7 +31,6 @@ function newToken() {
 }
 
 app.post('/login', function (req, res) {
-  console.log(req)
   let username = req.body.username
   username = username.trim().split(' ')[0]
   let password = req.body.password
@@ -39,17 +38,14 @@ app.post('/login', function (req, res) {
     if (err) {
       return res.send("INCORRECT")
     }
-    if (result) {
-      if (password === result[0].password) {
-        let randomToken = newToken()
-        let object = {token: randomToken, username}
-        recentlyUsedTokens.push(object)
-        res.send(randomToken)
-      } else {
-        return res.send("INCORRECT")
-      }
+    if (!result.length) return res.send("INCORRECT")
+    if (password === result[0].password) {
+      let randomToken = newToken()
+      let object = {token: randomToken, username}
+      recentlyUsedTokens.push(object)
+      res.send(randomToken)
     } else {
-      return res.send("INCORRECT")
+      res.send("INCORRECT")
     }
   })
 })
