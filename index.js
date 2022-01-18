@@ -37,7 +37,7 @@ app.post('/login', function (req, res) {
   let password = req.body.password
   pool.query(`SELECT \`password\` FROM \`logins\` WHERE \`username\` = (SELECT \`username\` FROM logins WHERE \`username\` = '${username}')`, (err, result, fields) => {
     if (err) {
-      res.redirect('/login')
+      return res.send("INCORRECT")
     }
     if (password === result[0].password) {
       let randomToken = newToken()
