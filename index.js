@@ -45,7 +45,7 @@ app.post('/login', function (req, res) {
       recentlyUsedTokens.push(object)
       res.send(randomToken)
     } else {
-      return res.redirect('/login')
+      return res.send("INCORRECT")
     }
   })
 })
