@@ -39,12 +39,15 @@ app.post('/login', function (req, res) {
     if (err) {
       return res.send("INCORRECT")
     }
-    if (!result) return res.send("INCORRECT")
-    if (password === result[0].password) {
-      let randomToken = newToken()
-      let object = {token: randomToken, username}
-      recentlyUsedTokens.push(object)
-      res.send(randomToken)
+    if (result) {
+      if (password === result[0].password) {
+        let randomToken = newToken()
+        let object = {token: randomToken, username}
+        recentlyUsedTokens.push(object)
+        res.send(randomToken)
+      } else {
+        return res.send("INCORRECT")
+      }
     } else {
       return res.send("INCORRECT")
     }
