@@ -76,9 +76,6 @@ wss.on('connection', async function connection (ws) {
         if (tokenMessage.split(':')[1].trim() === recentlyUsedTokens[i].token) {
           tokenUsed = true;
           username += recentlyUsedTokens[i].username
-          pool.query(`SELECT \`PortalNumber\` FROM \`logins\` WHERE \`username\` = '${username}'`, (err, result) => {
-            ws.send(`Player:${username}, Portal:${result[0].PortalNumber}`)
-          })
         }
       }
       if (!tokenUsed) {
@@ -103,11 +100,9 @@ wss.on('connection', async function connection (ws) {
     players.push((number + 1))
   
     wss.clients.forEach(function each(client) {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        pool.query(`SELECT \`PortalNumber\` FROM \`logins\` WHERE \`username\` = '${username}'`, (err, result) => {
-          client.send(`Player:${username}, Portal:${result[0].PortalNumber}`)
-        })
-      }
+      pool.query(`SELECT \`PortalNumber\` FROM \`logins\` WHERE \`username\` = '${username}'`, (err, result) => {
+        client.send(`Player:${username}, Portal:${result[0].PortalNumber}`)
+      })
     })
   
     ws.on('message', (message) => {
