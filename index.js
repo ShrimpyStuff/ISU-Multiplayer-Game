@@ -84,6 +84,7 @@ wss.on('connection', async function connection (ws) {
       }
     }
     if (ran) return;
+    if (!tokenUsed) return;
     ran = true;
     const number = players[players.length - 1]
     if (wss.clients.size > 1) {
@@ -101,6 +102,7 @@ wss.on('connection', async function connection (ws) {
   
     wss.clients.forEach(function each(client) {
       pool.query(`SELECT \`PortalNumber\` FROM \`logins\` WHERE \`username\` = '${username}'`, (err, result) => {
+        if (result[0].PortalNumber === 0) return;
         client.send(`Player:${username}, Portal:${result[0].PortalNumber}`)
       })
     })
