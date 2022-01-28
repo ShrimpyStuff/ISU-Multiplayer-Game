@@ -102,7 +102,7 @@ wss.on('connection', async function connection (ws) {
   
     wss.clients.forEach(function each(client) {
       pool.query(`SELECT \`PortalNumber\` FROM \`logins\` WHERE \`username\` = '${username}'`, (err, result) => {
-        if (result[0].PortalNumber === 0) return;
+        if (result[0].PortalNumber == 0) return;
         client.send(`Player:${username}, Portal:${result[0].PortalNumber}`)
       })
     })
