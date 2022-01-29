@@ -100,14 +100,22 @@ wss.on('connection', async function connection (ws) {
     })
     players.push((number + 1))
   
-    wss.clients.forEach(function each(client) {
-      pool.query(`SELECT \`PortalNumber\` FROM \`logins\` WHERE \`username\` = '${username}'`, (err, result) => {
+    pool.query(`SELECT \`PortalNumber\` FROM \`logins\` WHERE \`username\` = '${username}'`, (err, result) => {
+      wss.clients.forEach(function each(client) {
         if (result[0].PortalNumber == 0) return;
-        client.send(`Player:${username}, Portal:${result[0].PortalNumber}`)
+        if (client !== ws && client.readyState === WebSocket.OPEN) {
+          client.send(`Player:${username}, Portal:${result[0].PortalNumber}`)
+        }
       })
     })
   
     ws.on('message', (message) => {
+      if (message == "Loaded Portals") {
+        pool.query(`SELECT \`PortalNumber\` FROM \`logins\` WHERE \`username\` = '${username}'`, (err, result) => {
+          if (result[0].PortalNumber == 0) return;
+            ws.send(`Player:${username}, Portal:${result[0].PortalNumber}`)
+        })
+      }
       if (message.startsWith('Portal:')) {
         console.log(message)
         console.log(message.split(':')[1])
